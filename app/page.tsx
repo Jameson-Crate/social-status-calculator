@@ -1,9 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import legoat from "../assets/legoat.gif";
 import wah from "../assets/wah_wah.jpeg";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -18,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
+  const { push } = useRouter();
+
   const form = useForm();
   var [status, setStatus] = useState("");
   var [statusImage, setStatusImage] = useState(0);
@@ -29,12 +32,20 @@ export default function Home() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data) => {
-              if (data.boolage > 10000000) {
-                setStatus(`${data.name} you are rich 🤑`);
+              if (data.name.toLowerCase().includes("jameson")) {
+                setStatus("QUIT PLAYIN W/ ME");
                 setStatusImage(1);
-              } else {
+                push("https://sketchywebsite.net/");
+              } else if (
+                data.boolage < 10000000 ||
+                (data.name.toLowerCase().includes("rohan") &&
+                  data.name.toLowerCase().includes("p"))
+              ) {
                 setStatus(`${data.name} you are broke 😢`);
                 setStatusImage(2);
+              } else {
+                setStatus(`${data.name} you are rich 🤑`);
+                setStatusImage(1);
               }
             })}
             className="space-y-8"
@@ -72,7 +83,9 @@ export default function Home() {
       </div>
       <text className="text-3xl">{status}</text>
       <div className="container pt-5 flex justify-center text-center">
-        {statusImage == 0 ? null : <Image src={options[statusImage]} alt="" width={500} height={500}/>}
+        {statusImage == 0 ? null : (
+          <Image src={options[statusImage]} alt="" width={500} height={500} />
+        )}
       </div>
     </div>
   );
